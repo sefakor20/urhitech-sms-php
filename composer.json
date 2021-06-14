@@ -1,0 +1,22 @@
+{
+    "name": "rcodes/urhitech-sms-api",
+    "description": "Urhitech SMS PHP SDK build for USMS-GH - Bulk SMS Application For Marketing",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "sefakor20",
+            "email": "sefakorhom2012@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "ext-curl": "*"
+    }
+}

@@ -195,7 +195,7 @@ class UrhitechSMSAPI
      * @param $api_token
      * @return mixed
      * 
-     * Delete Contact Group
+     * View all Contact Groups
      */
     public function all_contact_groups($url, $api_token)
     {

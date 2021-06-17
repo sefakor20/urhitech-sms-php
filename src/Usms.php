@@ -204,4 +204,75 @@ class UrhitechSMSAPI
     }
 
 
+    
+    /**
+     * @param $url
+     * @param $api_token
+     * @param $post_fields
+     * @return mixed
+     * 
+     * Creates a new contact object
+     */
+    public function create_contact($url, $api_token, $post_fields)
+    {
+        return $this->send_server_response($url, $api_token, $post_fields, 'post');
+    }
+
+
+    /**
+     * @param $url
+     * @param $api_token
+     * @return mixed
+     * 
+     * Retrieves the information of an existing contact
+     */
+    public function view_contact($url, $api_token) 
+    {
+        return $this->send_server_response($url, $api_token, '', 'post');
+    }
+
+
+
+    /**
+     * @param $url
+     * @param $api_token
+     * @param $post_fields
+     * @return mixed
+     * 
+     * Update an existing contact.
+     */
+    public function update_contact($url, $api_token, $post_fields)
+    {
+        return $this->send_server_response($url, $api_token, $post_fields, 'patch');
+    }
+
+
+
+    /**
+     * @param $url
+     * @param $api_token
+     * @return mixed
+     * 
+     * Delete an existing contact
+     */
+    public function delete_contact($url, $api_token)
+    {
+        return $this->send_server_response($url, $api_token, '', 'delete');
+    }
+
+
+
+    /**
+     * @param $url
+     * @param $api_token
+     * @return mixed
+     * 
+     * View all contacts in group
+     */
+    public function all_contacts_in_group($url, $api_token)
+    {
+        return $this->send_server_response($url, $api_token, '', 'post');
+    }
+
+
 }

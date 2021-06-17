@@ -1,6 +1,6 @@
 <?php
 
-namespace UrhitechSMS;
+namespace Urhitech\UrhitechSMS;
 
 class UrhitechSMSAPI 
 {
@@ -86,7 +86,6 @@ class UrhitechSMSAPI
     /**
      * @param $url
      * @param $api_token
-     * @param $post_fields
      * @return mixed
      * 
      * View an SMS

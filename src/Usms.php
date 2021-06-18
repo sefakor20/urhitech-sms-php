@@ -1,6 +1,6 @@
 <?php
 
-namespace Urhitech\UrhitechSMS;
+namespace UrhitechSMS;
 
 class UrhitechSMSAPI 
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace UrhitechSMS;
+namespace UrhitechSMSPHP;
 
-class UrhitechSMSAPI 
+class UrhitechSMSPHPAPI 
 {
     /**
      * @param $request_method

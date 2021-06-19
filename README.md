@@ -27,14 +27,14 @@ git clone https://github.com/sefakor20/urhitech-sms-php.git
 ### Step 1:
 If you install the Urhitech SMS PHP SDK via Git Clone then load the Urhitech SMS PHP API class file and use namespace.
 
-```
+```php
 require_once '/path/to/src/Usms.php';
 use UrhitechSMSPHP\UrhitechSMSPHPAPI;
 ```
 
 If you install Urhitech SMS PHP SDK via [Composer](http://getcomposer.org/) the Require the autoload.php file in the index.php of your project or whatever file you need to use Urhitech SMS PHP API classes.
 
-```
+```php
 require 'vendor/autoload.php';
 use UrhitechSMSPHP\UrhitechSMSPHPAPI;
 ```

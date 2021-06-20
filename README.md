@@ -39,5 +39,63 @@ require 'vendor/autoload.php';
 use UrhitechSMSPHP\UrhitechSMSPHPAPI;
 ```
 
+The Urhitech SMS PHP SDK endpoints are RESTful, and consume and return JSON. All Http endpoints requires an API Key in the request header.
+
+For more information on how to get an API Key visit [here](https://webapp.usmsgh.com/developers) to copy or generate new key for authorization. 
+
+## HTTP ENDPOINTS
+* https://webapp.usmsgh.com/api/sms/send
+* https://webapp.usmsgh.com/api/sms/{uid}
+* https://webapp.usmsgh.com/api/sms
+* https://webapp.usmsgh.com/api/me
+* https://webapp.usmsgh.com/api/balance
+* https://webapp.usmsgh.com/api/contacts
+* https://webapp.usmsgh.com/api/contacts/{group_id}/show/
+* https://webapp.usmsgh.com/api/contacts/{group_id}
+* https://webapp.usmsgh.com/api/contacts/{group_id}/store
+* https://webapp.usmsgh.com/api/contacts/{group_id}/search/{uid}
+* https://webapp.usmsgh.com/api/contacts/{group_id}/update/{uid}
+* https://webapp.usmsgh.com/api/contacts/{group_id}/delete/{uid}
+* https://webapp.usmsgh.com/api/contacts/{group_id}/all
 
 
+### Step 2:
+Instantiate the UrhitechSMSPHPAPI
+```php
+$client = new UrhitechSMSPHPAPI();
+```
+
+# Send SMS
+```php
+$api_key = "Enter Your API Key here";
+
+$url = "https://webapp.usmsgh.com/api/sms/send";
+
+$post_fields = array(
+    'recipient' => '233500000000',
+    'sender_id' => 'Enter your approved sender ID here',
+    'message'   => 'Hello world'
+)
+
+$response = $client->send_sms($url, $api_key, $post_fields);
+```
+
+
+# Check SMS Credit Balance
+```php
+$api_key = "Enter Your API Key here";
+
+$url = "https://webapp.usmsgh.com/api/balance";
+
+$get_credit_balance = $client->check_balance($url, $api_key);
+```
+
+
+# View Profile
+```php
+$api_key = "Enter Your API Key here";
+
+$url = "https://webapp.usmsgh.com/api/me";
+
+$get_profile = $client->profile($url, $api_key);
+```

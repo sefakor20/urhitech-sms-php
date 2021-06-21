@@ -8,10 +8,10 @@ The library provides other features. For Example:
 
 You can sign up for a USMSGH account at [usmsgh.com](https://www.usmsgh.com)
 
-# Prerequisites
+## Prerequisites
 PHP 5.6.0  and later
 
-# Installation
+## Installation
 Via [Composer](http://getcomposer.org/)
 ```
 $ composer require urhitech/urhitech-sms-php
@@ -22,7 +22,10 @@ Via Git Bash
 git clone https://github.com/sefakor20/urhitech-sms-php.git
 ```
 
-# Usage
+## Documentation
+Please see [https://usmsgh.com/developer/](https://usmsgh.com/developer/) for up-to-date documentation
+
+## Usage
 
 ### Step 1:
 If you install the Urhitech SMS PHP SDK via Git Clone then load the Urhitech SMS PHP API class file and use namespace.
@@ -65,7 +68,7 @@ Instantiate the UrhitechSMSPHPAPI
 $client = new UrhitechSMSPHPAPI();
 ```
 
-# Send SMS
+## Send SMS
 ```php
 $api_key = "Enter Your API Key here";
 
@@ -81,7 +84,7 @@ $response = $client->send_sms($url, $api_key, $post_fields);
 ```
 
 
-# Check SMS Credit Balance
+## Check SMS Credit Balance
 ```php
 $api_key = "Enter Your API Key here";
 
@@ -91,7 +94,7 @@ $get_credit_balance = $client->check_balance($url, $api_key);
 ```
 
 
-# View Profile
+## View Profile
 ```php
 $api_key = "Enter Your API Key here";
 

@@ -1,9 +1,10 @@
 <?php
 
-namespace UrhitechSMSPHP;
+namespace Urhitech;
 
-class UrhitechSMSPHPAPI 
+class Usms
 {
+    static $curl_handle = NULL;
     /**
      * @param $request_method
      * @param $url
@@ -14,54 +15,59 @@ class UrhitechSMSPHPAPI
      * Send Request to server and get sms status
      */
 
-    private function send_server_response($url, $api_token, $post_fields = null, $request_method = null)
+    private function send_server_response($endpoint, $api_token, $sender_id, $recipient, $message, $request_method = null)
     {
-        $ch = curl_init();
+        //Initialize the curl handle if it is not initialized yet
+        if (!isset($this::$curl_handle)) {
+            $this::$curl_handle = curl_init();
+        }
 
-        $data = json_encode($post_fields);
+        $data = json_encode([
+            'recipient' => $recipient,
+            'sender_id' => $sender_id,
+            'message' => $message,
+        ]);
 
-        curl_setopt ($ch, CURLOPT_URL, $url);
+        curl_setopt ($this::$curl_handle, CURLOPT_URL, $endpoint);
         if ($request_method == 'post') {
-            curl_setopt ($ch, CURLOPT_POST, true);
-            curl_setopt ($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt ($this::$curl_handle, CURLOPT_POST, true);
+            curl_setopt ($this::$curl_handle, CURLOPT_POSTFIELDS, $data);
         }
 
         // request_method == PUT
         if ($request_method == 'put') {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($this::$curl_handle, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($this::$curl_handle, CURLOPT_POSTFIELDS, $data);
         }
 
         // request_method == PATCH
         if ($request_method == 'patch') {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($this::$curl_handle, CURLOPT_CUSTOMREQUEST, 'PATCH');
+            curl_setopt($this::$curl_handle, CURLOPT_POSTFIELDS, $data);
         }
 
         // request_method == DELETE
         if ($request_method == 'delete') {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+            curl_setopt($this::$curl_handle, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
 
-        curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt ($ch, CURLOPT_HTTPHEADER, [
+        curl_setopt ($this::$curl_handle, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt ($this::$curl_handle, CURLOPT_HTTPHEADER, [
             "accept: application/json",
             "authorization: Bearer ".$api_token
         ]);
 
         // Allow cURL function to execute 20sec
-        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+        curl_setopt($this::$curl_handle, CURLOPT_TIMEOUT, 20);
 
         // waiting 20 secs while waiting to connect
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+        curl_setopt($this::$curl_handle, CURLOPT_CONNECTTIMEOUT, 20);
 
-        $response = curl_exec( $ch );
-
-        if ($e = curl_error($ch)) {
+        if ($e = curl_error($this::$curl_handle)) {
             return $e;
         } else {
-            return json_decode($response, true);
-            curl_close($ch);
+            return json_decode(curl_exec( $this::$curl_handle ), true);
+            curl_close($this::$curl_handle);
         }
 
     }
@@ -73,15 +79,18 @@ class UrhitechSMSPHPAPI
      * @param $post_fields
      * @return mixed
      * 
-     * Send single SMS
+     * Send single / group SMS
      */
-    public function send_sms($url, $api_token, $post_fields)
+    public function send_sms($endpoint, $api_token, $sender_id, $phones, $message)
     {
-        $response = $this->send_server_response($url, $api_token, 'post',  $post_fields);
-        return $response;
+        $phones = explode(',', $phones);
+        if (count($phones) > 1) {
+            foreach ($phones as $phone) {
+                $this->send_server_response($endpoint, $api_token, $sender_id, $phone, $message, 'post');
+            }
+        }
+        $this->send_server_response($endpoint, $api_token, $sender_id, $phones, $message, 'post');
     }
-
-
 
     /**
      * @param $url
@@ -92,8 +101,7 @@ class UrhitechSMSPHPAPI
      */
     public function view_sms($url, $api_token)
     {
-        $response = $this->send_server_response($url, $api_token,'', '');
-        return $response;
+        return $this->send_server_response($url, $api_token, '','', '');
     }
 
 
@@ -106,8 +114,7 @@ class UrhitechSMSPHPAPI
      */
     public function profile($url, $api_token)
     {
-        $response = $this->send_server_response($url, $api_token, '', '');
-        return $response;
+        return $this->send_server_response($url, $api_token, '', '', '');
     }
 
 
@@ -121,8 +128,7 @@ class UrhitechSMSPHPAPI
     public function check_balance($url, $api_token)
     {
 
-        $response = $this->send_server_response($url, $api_token, '', '');
-        return $response;
+        return $this->send_server_response($url, $api_token, '', '', '');
     }
 
 
@@ -135,10 +141,9 @@ class UrhitechSMSPHPAPI
      * 
      * Create a new Contact Group
      */
-    public function create_contact_group($url, $api_token, $post_fields)
+    public function create_contact_group($endpoint, $api_token, $sender_id, $phones, $message)
     {
-        $response = $this->send_server_response($url, $api_token, $post_fields, 'post');
-        return $response;
+        return $this->send_server_response($endpoint, $api_token, $sender_id, $phones, $message, 'post');
     }
 
 
@@ -152,8 +157,7 @@ class UrhitechSMSPHPAPI
      */
     public function view_contact_group($url, $api_token)
     {
-        $response = $this->send_server_response($url, $api_token, '', 'post');
-        return $response;
+        return $this->send_server_response($url, $api_token, '', '', 'post');
     }
 
 
@@ -166,10 +170,9 @@ class UrhitechSMSPHPAPI
      * 
      * Update Contact Group
      */
-    public function update_contact_group($url, $api_token, $post_fields)
+    public function update_contact_group($endpoint, $api_token, $sender_id, $phones, $message)
     {
-        $response = $this->send_server_response($url, $api_token, $post_fields, 'patch');
-        return $response;
+        return $this->send_server_response($endpoint, $api_token, $sender_id, $phones, $message, 'patch');
     }
 
 
@@ -183,8 +186,7 @@ class UrhitechSMSPHPAPI
      */
     public function delete_contact_group($url, $api_token)
     {
-        $response = $this->send_server_response($url, $api_token, '', 'delete');
-        return $response;
+        return $this->send_server_response($url, $api_token, '', '', 'delete');
     }
 
 
@@ -198,8 +200,7 @@ class UrhitechSMSPHPAPI
      */
     public function all_contact_groups($url, $api_token)
     {
-        $response = $this->send_server_response($url, $api_token, '', '');
-        return $response;
+        return $this->send_server_response($url, $api_token, '', '', '');
     }
 
 
@@ -212,9 +213,9 @@ class UrhitechSMSPHPAPI
      * 
      * Creates a new contact object
      */
-    public function create_contact($url, $api_token, $post_fields)
+    public function create_contact($endpoint, $api_token, $sender_id, $phones, $message)
     {
-        return $this->send_server_response($url, $api_token, $post_fields, 'post');
+        return $this->send_server_response($endpoint, $api_token, $sender_id, $phones, $message, 'post');
     }
 
 
@@ -227,7 +228,7 @@ class UrhitechSMSPHPAPI
      */
     public function view_contact($url, $api_token) 
     {
-        return $this->send_server_response($url, $api_token, '', 'post');
+        return $this->send_server_response($url, $api_token, '', '', 'post');
     }
 
 
@@ -240,9 +241,9 @@ class UrhitechSMSPHPAPI
      * 
      * Update an existing contact.
      */
-    public function update_contact($url, $api_token, $post_fields)
+    public function update_contact($endpoint, $api_token, $sender_id, $phones, $message)
     {
-        return $this->send_server_response($url, $api_token, $post_fields, 'patch');
+        return $this->send_server_response($endpoint, $api_token, $sender_id, $phones, $message, 'patch');
     }
 
 
@@ -256,7 +257,7 @@ class UrhitechSMSPHPAPI
      */
     public function delete_contact($url, $api_token)
     {
-        return $this->send_server_response($url, $api_token, '', 'delete');
+        return $this->send_server_response($url, $api_token, '', '', 'delete');
     }
 
 
@@ -270,8 +271,7 @@ class UrhitechSMSPHPAPI
      */
     public function all_contacts_in_group($url, $api_token)
     {
-        return $this->send_server_response($url, $api_token, '', 'post');
+        return $this->send_server_response($url, $api_token, '', '', 'post');
     }
-
 
 }

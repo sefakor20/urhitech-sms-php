@@ -83,13 +83,18 @@ class Usms
      */
     public function send_sms($endpoint, $api_token, $sender_id, $phones, $message)
     {
+        $single_phone = $phones;
         $phones = explode(',', $phones);
         if (count($phones) > 1) {
             foreach ($phones as $phone) {
                 $this->send_server_response($endpoint, $api_token, $sender_id, $phone, $message, 'post');
             }
+        } else {
+            // print_r($single_phone);exit();
+            $this->send_server_response($endpoint, $api_token, $sender_id, $single_phone, $message, 'post');
         }
-        $this->send_server_response($endpoint, $api_token, $sender_id, $phones, $message, 'post');
+       
+        return false;
     }
 
     /**

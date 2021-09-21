@@ -32,14 +32,14 @@ If you install the Urhitech SMS PHP SDK via Git Clone then load the Urhitech SMS
 
 ```php
 require_once '/path/to/src/Usms.php';
-use UrhitechSMSPHP\UrhitechSMSPHPAPI;
+use use Urhitech\Usms;;
 ```
 
 If you install Urhitech SMS PHP SDK via [Composer](http://getcomposer.org/) the Require the autoload.php file in the index.php of your project or whatever file you need to use Urhitech SMS PHP API classes.
 
 ```php
-require 'vendor/autoload.php';
-use UrhitechSMSPHP\UrhitechSMSPHPAPI;
+require __DIR__ . '/vendor/autoload.php';
+use use Urhitech\Usms;;
 ```
 
 The Urhitech SMS PHP SDK endpoints are RESTful, and consume and return JSON. All Http endpoints requires an API Key in the request header.
@@ -65,7 +65,7 @@ For more information on how to get an API Key visit [here](https://webapp.usmsgh
 ### Step 2:
 Instantiate the UrhitechSMSPHPAPI
 ```php
-$client = new UrhitechSMSPHPAPI();
+$client = new Urhitech\Usms;
 ```
 
 ## Send SMS
@@ -74,13 +74,11 @@ $api_key = "Enter Your API Key here";
 
 $url = "https://webapp.usmsgh.com/api/sms/send";
 
-$post_fields = array(
-    'recipient' => '233500000000',
-    'sender_id' => 'Enter your approved sender ID here',
-    'message'   => 'Hello world'
-)
+$recipients = "233500000000,233540000000";
+$message = "Hello world";
+$senderid = "Enter your approved sender ID here";
 
-$response = $client->send_sms($url, $api_key, $post_fields);
+$response = $client->send_sms($url, $api_key, $senderid, $recipients, $message);
 ```
 
 

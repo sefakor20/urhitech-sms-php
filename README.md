@@ -14,7 +14,7 @@ PHP 5.6.0  and later
 ## Installation
 Via [Composer](http://getcomposer.org/)
 ```
-$ composer require urhitech/urhitech-sms-php
+$ composer require urhitech/urhitech-sms-php --dev-main
 ```
 
 Via Git Bash
@@ -32,7 +32,7 @@ If you install the Urhitech SMS PHP SDK via Git Clone then load the Urhitech SMS
 
 ```php
 require_once '/path/to/src/Usms.php';
-use use Urhitech\Usms;;
+use Urhitech\Usms;
 ```
 
 If you install Urhitech SMS PHP SDK via [Composer](http://getcomposer.org/) the Require the autoload.php file in the index.php of your project or whatever file you need to use Urhitech SMS PHP API classes.

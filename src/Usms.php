@@ -97,6 +97,26 @@ class Usms
         return false;
     }
 
+
+
+
+    /**
+     * @param $endpoint
+     * @param $api_token
+     * @param $sender_id
+     * @param $phone
+     * @param $message
+     * @return mixed
+     *
+     * Send single
+     */
+    public function sendSingle($endpoint, $api_token, $sender_id, $phone, $message)
+    {
+        $this->send_server_response($endpoint, $api_token, $sender_id, $phone, $message, 'post');
+    }
+
+
+
     /**
      * @param $url
      * @param $api_token

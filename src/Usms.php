@@ -15,18 +15,24 @@ class Usms
      * Send Request to server and get sms status
      */
 
-    private function send_server_response($endpoint, $api_token, $sender_id, $recipient, $message, $request_method = null)
+    private function send_server_response($endpoint, $api_token, $post_fields = [], $sender_id, $recipient, $message, $request_method = null)
     {
         //Initialize the curl handle if it is not initialized yet
         if (!isset($this::$curl_handle)) {
             $this::$curl_handle = curl_init();
         }
 
-        $data = json_encode([
-            'recipient' => $recipient,
-            'sender_id' => $sender_id,
-            'message' => $message,
-        ]);
+        if (!empty($post_fields)) {
+            $data = json_encode($post_fields);
+
+        } else {
+            $data = json_encode([
+                'recipient' => $recipient,
+                'sender_id' => $sender_id,
+                'message' => $message,
+            ]);
+        }
+        
 
         curl_setopt ($this::$curl_handle, CURLOPT_URL, $endpoint);
         if ($request_method == 'post') {
@@ -87,7 +93,7 @@ class Usms
         $phones = explode(',', $phones);
         if (count($phones) > 1) {
             foreach ($phones as $phone) {
-                $this->send_server_response($endpoint, $api_token, $sender_id, $phone, $message, 'post');
+                $this->send_server_response($endpoint, $api_token, '', $sender_id, $phone, $message, 'post');
             }
         } else {
             // print_r($single_phone);exit();
@@ -112,7 +118,7 @@ class Usms
      */
     public function sendSingle($endpoint, $api_token, $sender_id, $phone, $message)
     {
-        $this->send_server_response($endpoint, $api_token, $sender_id, $phone, $message, 'post');
+        $this->send_server_response($endpoint, $api_token, '',  $sender_id, $phone, $message, 'post');
     }
 
 
@@ -126,7 +132,7 @@ class Usms
      */
     public function view_sms($url, $api_token)
     {
-        return $this->send_server_response($url, $api_token, '','', '');
+        return $this->send_server_response($url, $api_token, '','', '', '', '', '');
     }
 
 
@@ -139,7 +145,7 @@ class Usms
      */
     public function profile($url, $api_token)
     {
-        return $this->send_server_response($url, $api_token, '', '', '');
+        return $this->send_server_response($url, $api_token, '', '', '', '', '', '');
     }
 
 
@@ -153,7 +159,7 @@ class Usms
     public function check_balance($url, $api_token)
     {
 
-        return $this->send_server_response($url, $api_token, '', '', '');
+        return $this->send_server_response($url, $api_token, '', '', '', '', '');
     }
 
 
@@ -166,9 +172,9 @@ class Usms
      * 
      * Create a new Contact Group
      */
-    public function create_contact_group($endpoint, $api_token, $sender_id, $phones, $message)
+    public function create_contact_group($endpoint, $api_token, $post_fields)
     {
-        return $this->send_server_response($endpoint, $api_token, $sender_id, $phones, $message, 'post');
+        return $this->send_server_response($endpoint, $api_token, $post_fields, '', '', '', 'post');
     }
 
 
@@ -182,7 +188,7 @@ class Usms
      */
     public function view_contact_group($url, $api_token)
     {
-        return $this->send_server_response($url, $api_token, '', '', 'post');
+        return $this->send_server_response($url, $api_token, '', '',  '', '', 'post');
     }
 
 
@@ -197,7 +203,7 @@ class Usms
      */
     public function update_contact_group($endpoint, $api_token, $sender_id, $phones, $message)
     {
-        return $this->send_server_response($endpoint, $api_token, $sender_id, $phones, $message, 'patch');
+        return $this->send_server_response($endpoint, $api_token, '', $sender_id, $phones, $message, 'patch');
     }
 
 
@@ -211,7 +217,7 @@ class Usms
      */
     public function delete_contact_group($url, $api_token)
     {
-        return $this->send_server_response($url, $api_token, '', '', 'delete');
+        return $this->send_server_response($url, $api_token, '', '', '',  '', 'delete');
     }
 
 
@@ -225,7 +231,7 @@ class Usms
      */
     public function all_contact_groups($url, $api_token)
     {
-        return $this->send_server_response($url, $api_token, '', '', '');
+        return $this->send_server_response($url, $api_token, '', '', '', '', '');
     }
 
 
@@ -238,9 +244,9 @@ class Usms
      * 
      * Creates a new contact object
      */
-    public function create_contact($endpoint, $api_token, $sender_id, $phones, $message)
+    public function create_contact($endpoint, $api_token, $post_fields = [])
     {
-        return $this->send_server_response($endpoint, $api_token, $sender_id, $phones, $message, 'post');
+        return $this->send_server_response($endpoint, $api_token, $post_fields, '', '', '', 'post');
     }
 
 
@@ -253,7 +259,7 @@ class Usms
      */
     public function view_contact($url, $api_token) 
     {
-        return $this->send_server_response($url, $api_token, '', '', 'post');
+        return $this->send_server_response($url, $api_token, '', '', '', '', 'post');
     }
 
 
@@ -266,9 +272,9 @@ class Usms
      * 
      * Update an existing contact.
      */
-    public function update_contact($endpoint, $api_token, $sender_id, $phones, $message)
+    public function update_contact($endpoint, $api_token, $post_fields = [])
     {
-        return $this->send_server_response($endpoint, $api_token, $sender_id, $phones, $message, 'patch');
+        return $this->send_server_response($endpoint, $api_token, $post_fields, '', '', '', 'patch');
     }
 
 
@@ -282,7 +288,7 @@ class Usms
      */
     public function delete_contact($url, $api_token)
     {
-        return $this->send_server_response($url, $api_token, '', '', 'delete');
+        return $this->send_server_response($url, $api_token, '', '', '', '', 'delete');
     }
 
 
@@ -297,6 +303,22 @@ class Usms
     public function all_contacts_in_group($url, $api_token)
     {
         return $this->send_server_response($url, $api_token, '', '', 'post');
+    }
+
+
+
+
+    /**
+     * @param $url
+     * @param $api_token
+     * @param $post_fields
+     * @return mixed
+     *
+     * Confirm Inbound receipt
+     */
+    public function confirm_inbound($url, $api_token, $post_fields = []) 
+    {
+        return $this->send_server_response($url, $api_token, $post_fields, '', '', '', 'put');
     }
 
 }

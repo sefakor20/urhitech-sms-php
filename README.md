@@ -14,7 +14,7 @@ PHP 5.6.0  and later
 ## Installation
 Via [Composer](http://getcomposer.org/)
 ```
-$ composer require urhitech/urhitech-sms-php --dev-main
+composer require urhitech/urhitech-sms-php
 ```
 
 Via Git Bash
